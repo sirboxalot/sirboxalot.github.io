@@ -1,0 +1,23 @@
+
+
+body {
+  background-color: #115412;
+  color: white;
+  font-family: Arial;
+}
+
+a {
+  color:white;
+}
+
+a:hover{
+  color:#48f542;
+}
+
+a:visited{
+  color:#42e6f5;
+}
+
+td{
+  padding:3px;
+}
