@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<!-- HUGE SHOUTS OUT TO https://www.jackis.online/freewebsite.html -->
+        <!--this stuff is standard but i do not know what it does really-->
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <title>evan's website</title>
+
+        <!--stuff that's important if you want an embedded preview of this site on discord, etc-->
+        <meta property="og:title" content="evan's website">
+        <meta property="og:description" content="the one true homepage of sirboxalot">
+        <meta property="og:image" content="./eggbugpatch.jpg">
+        <!--one thing that is annoying about meta tags is that every site (twitter, bluesky, etc) caches this stuff the first time you post a link and some sites only check again every few weeks or even never. so you'd better pick a good image the first time-->
+
+        <!--font links-->
+        <link rel="preconnect" href="https://rsms.me/">
+        <link rel="stylesheet" href="./inter.css">
+        <!--there are two ways to get a font on a website: these links in the head or using @import in the css. i always use links. i think @import is mostly for like, emails?-->
+
+        <style>
+            /* basic rules for whole site */
+            * { 
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                /*often you need to "reset" some stuff at the top of your stylesheet because many elements have default properties that are annoying to work around. see "bonus" */
+
+                /* color variables (these don't have to be hex codes. you can specify a color a bunch of ways or even use a background image) */
+                --textcolor: #ffffff;
+                --pagebg: #000000;
+                --sectionbg: #000000
+                --links: #666666;
+                --mono: #363636;
+                --monobg: #eeeeee;
+            }
+            /* variables make it easier to recolor the whole site, plus some really simple scripting can add a button for dark mode. or, try activating this next chunk for an automatic dark mode based on the system theme */
+
+            /*
+            @media (prefers-color-scheme: dark) {
+            *{
+            --textcolor: #ffffff;
+            --bgcolor: #26262D;
+            --links: #B2B2B2;
+            --mono: #ccc;
+            --monobg: #3f3f3f;
+            }
+            p{
+            letter-spacing: .025em;
+            font-weight: 350;
+            }
+            }
+            */
+
+            html{
+                background-color: var(--pagebg);
+            }
+
+            body {
+                font-size: 16px;
+                /* defining a font size here determines the size of an em (see "bonus") */
+                font-family: Verdana, sans-serif;
+                /* you should always add a "fallback" font category when specifying a font. this way if the font can't load the page still looks sort of how you intended */
+                line-height: 1.4;
+                color: var(--textcolor);
+                /* "color" actually refers to specifically the text color within an element. yeah i know */
+                position: relative;
+                /* you normally wouldn't bother setting this but for the sections to be "absolute" their parent has to be "relative" */
+                margin: 0;
+                margin-top: -1em;
+                /* a negative margin is also weird to do but I was getting a small strip of empty space at the top of the site and could not figure out why so i just accounted for it. it's okay to make websites this way! nobody looks at the code! */
+                max-width: 40em;
+                /* this sets the width of the body where all the content lives, but with paragraphs constrained to their own max width it mostly just moves the navbar around */
+            }
+
+            header {
+                padding: 3em 2em 1em 2em;
+                /* when you do padding or margin in one line like this it goes top-right-bottom-left */
+                display: flex;
+                flex-wrap: wrap;
+                position: absolute;
+                /*"absolute" elements don't get pushed around by other elements on the screen*/
+                top: 0;
+                width: 100%;
+                z-index: 2;
+                /* z-index makes an element render on top of other things. by default elements further down the page render in front of everything before them */
+            }
+
+            h1 {
+                font-size: 1em;
+                font-weight: 600;
+                flex: 1;
+                /*this pushes the nav links to the right. flex is a whole system i'm not gonna get into here */
+                white-space: nowrap;
+            }
+
+            nav a:not(:last-of-type) {
+                margin-right: .5em;
+                /* this puts space between the nav links but not after the last one. css has some pretty in-depth logic rules like this */
+            }
+
+            /* sections */
+            section {
+                padding: 6em 2em 3em;
+                /* the reason for padding instead of margin here is because anchor links automatically scroll to the top of the target */
+
+                /* the next six lines are really important. but maybe see what happens if you change them anyway */
+                display: none;
+                background: var(--sectionbg);
+                position: absolute;
+                top: 0;
+                width: 100%;
+                min-height: 110vh;
+                /* "vh" and "vw" are useful units that equal one percent of the "viewport" width or height. so 100vh is 100% as tall as the screen */
+            }
+
+            section:target {
+                display: block;
+                /* :target is what makes the pages render one at a time. "block" is the default display mode */
+            }
+
+            section#home {
+                display: block;
+                /* this makes the homepage appear by default. generally, the most specific rule (like a style applied to one ID) overrides any more general rules (like one applied to a whole type of element) */
+            }
+
+            /* footer */
+            section:after{
+                content:"~~~~~";
+                position: relative;
+                color: var(--links);
+                font-size: 85%;
+                padding: .25em 0;
+                border-top: 1px solid var(--links);
+            }
+            /* :after is kind of an advanced technique and is a bizarre way to handle a footer, but given that each section is a different height and they need to be positioned absolutely this is the best way i could think of */
+            
+            section p:last-child{
+                margin-bottom: 3em;
+            }
+
+            /* text styles */
+            p {
+                /* "p" is for paragraphs */
+                font-size: 1em;
+                max-width: 55ch;
+                /*this limits the line length of paragraphs to 55 characters long. i actually just learned this is possible while making this template */
+                margin-bottom: 1em;
+            }
+
+            a {
+                /* "a" is for links which is wack imo */
+                text-decoration: underline;
+                text-decoration-color: transparent;
+                transition: 0.2s;
+                color: var(--links);
+            }
+
+            a:hover {
+                text-decoration-color: var(--links);
+                transition: 0.2s;
+                /* here i'm using "transition," an easy way to animate things, along with making the default underline color transparent because you can't animate whether an underline is there but you can animate what color it is. ":hover" makes something look different when you hover on it, which you probably guessed */
+            }
+
+            p a{
+                text-decoration-color: var(--links);
+            }
+            /* "p [space] a" applies to all links (a) inside paragraphs (p). this trick works with any pair of elements */
+
+            a.inert:hover{
+                text-decoration-color: transparent;
+            }
+            /* this "inert" class for links is just for the slashes in the nav menu. which could have been p's but i'd have to make those part of the flex container and i am lazy */
+
+            h2 {
+                font-size: 2em;
+                font-weight: 700;
+                margin-bottom: .5em;
+                letter-spacing: -0.03em;
+                /* css will let you get very particular with your typography. which is not necessary at all but i appreciate, as a dork */
+            }
+
+            h3 {
+                font-size: 1.3em;
+                margin-top: 1.5em;
+                margin-bottom: .5em;
+                letter-spacing: -0.02 em;
+            }
+            /* there are 5 or 6 different h's (headings) and they can all be styled differently. it's a good idea to use them in descending order of importance */
+
+            span.mono {
+                font-family: monospace;
+                font-size: 0.9em;
+                color: var(--mono);
+                white-space: nowrap;
+                background-color: var(--monobg);
+                padding: 1px;
+                border-radius: 4px;
+            }
+            /* a "span" lets you sort of highlight some text and make it look different without breaking the flow of text. the period tells the computer what class of span to apply this rule to */
+
+            div.inline {
+                width: 35em;
+                max-width: 90vw;
+                margin-bottom: 2em;
+                margin-top: 2em;
+            }
+            /* this gives embedded stuff about the same width + spacing as paragraphs when it's inside a div with the "inline" class. a div is just an all-purpose box for building and organizing with. you can go right to the class-specifying period without an element type and it'll just style any type of thing with that class */
+
+            .inline p{
+                font-size: 0.8em;
+                color: var(--links);
+                font-style: italic;
+            }
+            /* this makes text inside an "inline" div read as a caption */
+
+            img{
+                width: 100%;
+                height: auto;
+            }
+            /* images like to kind of go wild if you don't tell them what size to be. the default is 1:1 pixel size i think? which is almost always too big */
+
+            /* phone styling */
+            @media only screen and (max-width: 680px) {
+                body {
+                    font-size: 16px;
+                    line-height: 1.6;
+                }
+                header {
+                    padding: 1em 1em 1em 1em;
+                    position: fixed;
+                    background: var(--bgcolor);
+                    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.61);
+                }
+                header h1{
+                    display: none;
+                }
+                section{
+                    padding: 6em 1em 1em 1em;
+                }
+                nav{
+                    white-space: nowrap;
+                }
+                nav a:not(:last-of-type) {
+                    margin-right: 0em;
+                }
+                /* media rules basically let you write a whole extra set of CSS styles that kick in based on something about the user's device (screen size, orientation, etc). they are good to know about for accessibility's sake. */
+        </style>
+    </head>
+    <body>
+
+        <header>
+            <h1>
+                <a href="#">evan's website</a>
+            </h1>
+            <nav>
+                <!--these links are anchors (note the hashtags). they target a specific section with a matching ID.-->
+                <a href="#home">home</a>
+                <a class="inert">/</a>
+                <a href="#links">links</a>
+
+               
+            </nav>
+        </header>
+
+        <main>
+            <!--HOME-->
+            <section id="home" style="pointer-events: auto;">
+                <!--see id="home"? you get it i'm sure-->
+                <h2>Home</h2>
+                <p>website of evan </p>
+
+            </section>
+
+		<section id="links" style="pointer-events: auto;">
+
+                <h2>links</h2>
+                <p>links section testing ok??</p>
+		</section>
+
+
+
+
+
+    
+    
+</body><!--
+This is free and unencumbered software released into the public domain.
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+For more information, please refer to <https://unlicense.org>
+--></html>
